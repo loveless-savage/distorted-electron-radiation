@@ -1,0 +1,20 @@
+function derivs=Lorentz(t,q)
+global LaserField;
+x=q(1);
+y=q(2);
+z=q(3);
+px=q(4);
+py=q(5);
+pz=q(6);
+gamma=sqrt(1+px^2+py^2+pz^2);
+ux= px/gamma;
+uy= py/gamma;
+uz= pz/gamma;
+[Ex,Ey,Ez,Bx,By,Bz]=LaserField(x,y,z,t);
+derivs=q*0;
+derivs(1)=ux;
+derivs(2)=uy;
+derivs(3)=uz;
+derivs(4)=-(Ex+uy*Bz-By*uz);
+derivs(5)=-(Ey-ux*Bz+Bx*uz);
+derivs(6)=-(Ez+ux*By-Bx*uy);
