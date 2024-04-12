@@ -4,7 +4,7 @@ global Ep w0 z0 tau;
 
 % frequency dependence
 N=100; % number of sub-frequencies in the eventual sum
-dw=8/tau/N; % frequency step
+dw=4/tau/N; % frequency step
 w=(-N/2:1:N/2)*dw; % range of all frequencies of interest
 
 % intermediate constants
