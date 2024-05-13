@@ -8,8 +8,8 @@ tau=2*pi*12; % pulse duration in radians
 
 % for all available distortions, see the folder ./LaserFields/
 addpath("./LaserFields/")
-% which distortion are we using? none = @CircularEnvelope
-LaserField = @SquashedEnvelope;
+% which distortion are we using? For no distortion use @CircularEnvelope
+LaserField = @CircularEnvelope;
 
 %% sample size & rendering parameters: these will be changed frequently!
 % # of electrons
