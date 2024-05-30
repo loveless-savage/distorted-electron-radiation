@@ -9,7 +9,7 @@ tau=2*pi*12; % pulse duration in radians
 % for all available distortions, see the folder ./LaserFields/
 addpath("./LaserFields/")
 % which distortion are we using? For no distortion use @CircularEnvelope
-LaserField = @CircularEnvelope;
+LaserField = @DumbFFT;
 
 %% sample size & rendering parameters: these will be changed frequently!
 % # of electrons
@@ -101,10 +101,10 @@ for n_e=1:mmax
             Ap_bp_tot = Ap_bp_tot+Ap_bp;
         end
         % band-pass frequencies within range of desired harmonic
-        for n_e=1:length(nu)
-            if nu(n_e)<fmin|nu(n_e)>fmax
-                At_bp(n_e)=0;
-                Ap_bp(n_e)=0;
+        for n_y=1:length(nu)
+            if nu(n_y)<fmin||nu(n_y)>fmax
+                At_bp(n_y)=0;
+                Ap_bp(n_y)=0;
             end
         end
         % inverse fourier transform
@@ -120,11 +120,12 @@ for n_e=1:mmax
 end
 
 %% polar plot of photon counts as a function of phi
-figure
 polarplot(p,Nt_tot,'g',p,Np_tot,'b','LineWidth',2)
 % frequency plot
 if showFrequencySpectrum
-    plot(nu,At_bp_tot,'b',nu,Ap_bp_tot,'b')
+    nw = floor(length(nu)/4);
+    plot(nu(1:nw),At_bp_tot(1:nw),'g',nu(1:nw),Ap_bp_tot(1:nw),'b');
+    grid on;
 end
 
 %% Plot number of photons on entire sphere.
