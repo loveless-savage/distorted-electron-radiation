@@ -2,13 +2,15 @@
 function [Ex,Ey,Ez,Bx,By,Bz]=Astigmatism(x,y,z,t)
 global Ep z0 tau;
 
-% intermediate constants
+% distortion parameters
 dz=z0/2; % axial focal misalignment
+theta=0; % rotate oval counterclockwise by this much
+
+% intermediate constants
 Zx=z0+i*z; % coherence length w/ z phase
 Zy=z0+i*(z-dz);
 Rx=z+z0^2./z; % radial distance from focus
 Ry=z-dz+z0^2./(z-dz);
-theta=0; % rotate oval counterclockwise by this much
 xr=x*cos(theta)-y*sin(theta);
 yr=x*sin(theta)+y*cos(theta);
 

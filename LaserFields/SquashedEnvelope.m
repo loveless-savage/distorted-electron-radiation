@@ -2,8 +2,11 @@
 function [Ex,Ey,Ez,Bx,By,Bz]=SquashedEnvelope(x,y,z,t)
 global Ep w0 z0 tau;
 
-% intermediate constants
+% distortion parameters
 squish=4; % by what factor should major+minor axes differ?
+theta=0; % rotate oval counterclockwise by this much
+
+% intermediate constants
 wx=w0/sqrt(squish);
 wy=w0*sqrt(squish);
 zx=wx^2/2; % two focal lengths
@@ -12,7 +15,6 @@ Zx=zx+i*z; % coherence length w/ z phase
 Zy=zy+i*z;
 Rx=z+zx^2./z; % radial distance from focus
 Ry=z+zy^2./z;
-theta=0; % rotate oval counterclockwise by this much
 xr=x*cos(theta)-y*sin(theta);
 yr=x*sin(theta)+y*cos(theta);
 
