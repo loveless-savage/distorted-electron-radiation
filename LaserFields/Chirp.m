@@ -4,7 +4,7 @@ global Ep w0 tau;
 
 % distortion parameters
 N=100; % number of sub-frequencies in the eventual sum
-chirp_r=0; % sideways frequency displacement
+chirp_r=2*w0; % sideways frequency displacement
 chirp_th=0; % chirp alignment compared to polarization
 
 % frequency dependence: to make a time envelope of width tau, we
@@ -31,8 +31,9 @@ for n=1:N
     R=z+dz0*dz0./z; % radial distance from focus
 
     % implement chirp displacement
-    cx = x + chirp_r/2*cos(chirp_th);
-    cy = y + chirp_r/2*cos(chirp_th);
+    w_chirp_r = 8*chirp_r*(n/N-0.5); % frequency-specific displacement
+    cx = x + w_chirp_r/2*cos(chirp_th);
+    cy = y + w_chirp_r/2*sin(chirp_th);
     rho2=cx.^2+cy.^2; % sideways radius
 
     % spatial gaussian envelope
