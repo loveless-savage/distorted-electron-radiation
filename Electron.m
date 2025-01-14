@@ -1,32 +1,34 @@
 clear; close all;
 format long
+% for all available distortions, see the folder ./LaserFields/
+addpath("./LaserFields/")
+
 global Ep w0 z0 tau LaserField;
 Ep=sqrt(1e18/2.146e18); % sqrt of intensity
 w0=2*pi*3; % beam waist
 z0=w0^2/2; % focal length
 tau=2*pi*12; % pulse duration in radians
 
-% for all available distortions, see the folder ./LaserFields/
-addpath("./LaserFields/")
+%% sample size & rendering parameters: these will be changed frequently!
+
 % which distortion are we using? For no distortion use @CircularEnvelope
-LaserField = @Chirp;
+LaserField = @CircularEnvelope;
 plottitlestr = join(['Distortion = ',func2str(LaserField)]);
 
-%% sample size & rendering parameters: these will be changed frequently!
 % # of electrons
 mmax=100;
 % polar plot resolution
 p_res=100;
 % frequency band-pass boundaries.  1=fundamental, 2=second harmonic.
-fmin=1.5; %1.3
-fmax=2.7; % 2.2
+fmin=1.3;
+fmax=2.2;
 % detector latitude for 2D polar plot
 latitude=pi/2;
 % which plots to show? default is just a 2D polar plot @ the equator
 showFrequencySpectrum=false;
-show3dFarField=true;
+show3dFarField=false;
 
-%% array initialization
+% array initialization
 % polar phi (longitude) coordinates for plotting
 p=0:2*pi/(p_res-1):2*pi;
 % accumulate photon counts w/ respect to phi
@@ -47,10 +49,10 @@ psin=sin(p);
 s_lat=sin(latitude);
 c_lat=cos(latitude);
 
-%% simulate multiple electrons
+%% simulate electron trajectories
 for n_e=1:mmax
     % print electron count progress
-    n_e
+    fprintf("Trajectories: %d\n",n_e)
 
     % random coordinates in the focal plane
     xi=w0;
@@ -75,14 +77,16 @@ for n_e=1:mmax
     %gamma=sqrt(1+pzi^2);
     %uz=pzi/gamma;
     %h=(1-uz)/(1+uz);
-    %h
 
     % find the electron trajectory
     [t,x,y,z,ux,uy,uz,ax,ay,az]=Trajectory(ti,tf,xi,yi,zi,pxi,pyi,pzi);
-    % show that trajectory
-    % figure
-    % plot(t/(2*pi),x/(2*pi),'b',t/(2*pi),y/(2*pi),'g',t/(2*pi),z/(2*pi),'r');
-    
+%end
+
+% calculate far-field radiation
+%for n_e=1:mmax
+    % print electron count progress
+%    fprintf("Far-fields: %d\n",n_e)
+
     % scan around the electron for radiation
     for j=1:p_res % phi (longitude)
         % detector cartesian coordinates in 3D
@@ -129,7 +133,7 @@ legend('\theta polarization','\phi polarization','Location','bestoutside');
 %% frequency plot
 if showFrequencySpectrum
     nw = floor(length(nu)/4);
-    plot(nu(1:nw),At_bp_tot(1:nw),'g',nu(1:nw),Ap_bp_tot(1:nw),'b');
+    semilogy(nu(1:nw),At_bp_tot(1:nw),'g',nu(1:nw),Ap_bp_tot(1:nw),'b');
     grid on;
 end
 
@@ -143,7 +147,8 @@ if show3dFarField
     Np_sph=Nt_sph;
     % paint across all bins
     for k=1:sph_res+1 % theta (latitude)
-        k
+        % print electron count progress
+        fprintf("Sphere rows: %d\n",k)
         for j=1:sph_res+1 % phi (longitude)
             xd=X(k,j);
             yd=Y(k,j);
